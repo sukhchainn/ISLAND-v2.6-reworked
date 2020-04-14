@@ -1,4 +1,4 @@
-/* 
+/*
                                 ISLAND v2.6
 
     Folks, sorry, but I was TOO lazy to write any comments....so figure it up
@@ -6,7 +6,7 @@ yourself....
 
 
 Black Gate coderz group...                         з- - --д  д- -©
-CyberDaemon...codez                                : CyberDaemon  
+CyberDaemon...codez                                : CyberDaemon
 Dreamcatcher..design and ideas                     ю  д-д  -д-- ды
 Chepponi......BBS                              <vkrstul@public.srce.hr>
 
@@ -18,7 +18,7 @@ Chepponi......BBS                              <vkrstul@public.srce.hr>
 #include <stdlib.h>
 #include <string.h>
 #include <ctype.h>
-#include <conio.h>
+#include "include/conio.h"
 
 #define UP(a)   (toupper (a))
 #define LOW(b)  (tolower (b))
@@ -209,7 +209,7 @@ char *opis_stvari[]={ "","a heavy engine",
 
 char *word_parse (char*,char*,int); // line parser
 void enargv      (char*); // line parser's help function
-void doit        (void);  // do orders	
+void doit        (void);  // do orders
 void recgn       (void);  // see which word is which (verb, or noun ... )
 void see_error   (void);  // see if any sintax error and identify words
 void opisi       (void); // describe the room
@@ -234,7 +234,7 @@ void e_          (void);
 void w_          (void);
 void enter	 (void);
 void opendoor    (void);
-void fall        (void); 
+void fall        (void);
 void endgame     (void);
 void inv	 (void); // inventory
 void help	 (void);
@@ -334,7 +334,7 @@ void event()
 	if (pos==7 || pos==8)
 		if (random (5)==2)
 			printf ("\nSuddenly a bunch of daemons passes by you carrying a sign:\n'Vote for this game!'\n'We love CyberDaemon!'");
-	
+
 }
 
 void sinonimi(void)
@@ -944,11 +944,11 @@ void see_error()
 				errpos= 0;
 				return;
 			}
-			err= 1;	
+			err= 1;
 			errpos= i;
-			return; 
+			return;
 		}
-	}		
+	}
 
 	if (wordtype[0] != 2)
 	{
@@ -1029,7 +1029,7 @@ void recgn()
 	int i, j;
 
 	for (j=0; j< globargc; j++)
-	{ 
+	{
 		for (i=1 ;i< (verbs+1) ;i++)
 			if (  compare(globargv[j],verb[i])==NERR  )
 				wordtype[j]=2;
