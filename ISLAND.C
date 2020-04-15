@@ -16,6 +16,7 @@ Chepponi......BBS                              <vkrstul@public.srce.hr>
 #include <stdio.h>
 #include <dos.h>
 #include <stdlib.h>
+#include <time.h>
 #include <string.h>
 #include <ctype.h>
 #include "include/conio.h"
@@ -29,6 +30,8 @@ Chepponi......BBS                              <vkrstul@public.srce.hr>
 #define CLOSED  0
 #define TRUE	1
 #define FALSE	0
+
+int random(int num);
 
 char *globargv[20]; // array of words parsed from input line
 char wordtype[20]; // type of word -> noun, verb ...
@@ -249,7 +252,7 @@ main()
 	asm( "jmp start" );
 	asm( "db 'UnderWorld forever....CyberDaemon'" );
 start:
-	randomize();
+	srand(time(NULL));
 	clrscr();
 	printf ("%s", roomnme[pos]);
 	printf ("\n--------------------------------------------------------------------------------");
@@ -310,6 +313,11 @@ void inv()
 				printf ("\n%s",opis_stvari[i]);
 		}
 
+}
+
+int random(int num)
+{
+    return rand() % num + 1;
 }
 
 void event()
