@@ -219,12 +219,12 @@ void event       (void);  // events in the game
 void look        (void);  // look something
 void get         (void);  // No comment needed here
 void read_       (void);
-void open_        (void);
+void open_       (void);
 void drop        (void);
 void turn        (void);
 void dig         (void);
 void start       (void);
-void close_       (void);
+void close_      (void);
 void unlock      (void);
 void load_       (void); // load savegame
 void save_       (void); // save savegame
@@ -232,12 +232,12 @@ void n_          (void);
 void s_          (void);
 void e_          (void);
 void w_          (void);
-void enter	 (void);
+void enter	     (void);
 void opendoor    (void);
 void fall        (void);
 void endgame     (void);
-void inv	 (void); // inventory
-void help	 (void);
+void inv	     (void); // inventory
+void help	     (void);
 void chk_adj	 (void); // check if right adjective used....
 void sinonimi    (void); // check for sinonims
 
@@ -246,8 +246,8 @@ main()
 {
 	char string[300];
 
-	asm jmp start
-	asm db 'UnderWorld forever....CyberDaemon'
+	asm( "jmp start" );
+	asm( "db 'UnderWorld forever....CyberDaemon'" );
 start:
 	randomize();
 	clrscr();
@@ -870,8 +870,8 @@ void fall()
 	printf ("\n\n    The game is over. You died.");
 	printf ("\n\nPress any key to return to DOS.");
 	getch();
-	asm mov ax, 4c00h
-	asm int 21h
+	asm( "mov ax, 4c00h" );
+	asm( "int 21h" );
 }
 void opendoor()
 {
@@ -905,8 +905,8 @@ void endgame()
 		getch();
 		clrscr();
 
-		asm mov ax, 4c00h
-		asm int 21h
+		asm( "mov ax, 4c00h" );
+		asm( "int 21h" );
 	}
 	else
 	{
