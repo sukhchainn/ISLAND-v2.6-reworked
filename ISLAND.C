@@ -40,7 +40,7 @@ char wordtype[20]; // type of word -> noun, verb ...
 int globargc;
 FILE *fp;
 
-struct smjerovi // structure of directions like north, south, east, west
+struct directions // structure of directions like north, south, east, west
 {
 	int n;
 	int s;
@@ -48,7 +48,7 @@ struct smjerovi // structure of directions like north, south, east, west
 	int w;
 };
 
-struct smjerovi prostorija[] = { 
+struct directions room[] = { 
 				0,0,0,0,    // structure with entrances to other rooms (4 directions)
 				-1,-1,-1,2,
 				0,3,1,0,
@@ -67,15 +67,14 @@ struct smjerovi prostorija[] = {
 				-1,-1,9,16,
 				-5,-5,15,-5      
 			};
-char *mess[]= { "",                            // Some messages
+char *message[]= { "",                            // Some messages
 		"The forest is unpassable unless you are the coder of this game to make it \npassable...",
 		"You don't know how to swim. Besides, it's full of sharks.",
 		"",
 		"Suddenly the CyberDaemon, coder of this game pops out from the stack and\ntells you that you can't go that way.",
 		""           };
 
-// These are arrays of nouns, verbs, ..., pron is a word in Croatian..
-
+// These are arrays of nouns, verbs, ...
 char *noun[]={ "","ENGINE","KEY","CAN","FOOD","SHOVEL","CUP","STICK","PAPER",
 		  "CHEST","AIRPLANE","HOUSE","BOAT","SAND","FUEL","DOOR",
 		  "PLANE","SIGN","GRAVE"};
@@ -86,7 +85,7 @@ char *verb[]={ "","N","S","E","W","LOOK","GET","DROP","DIG","OPEN","CLOSE",
 
 char *clan[]={ "","THE","AN","A" };
 
-char *pron[]={ "","HEAVY","GOLDEN","IRON","","","PLASTIC","WOODEN","SMALL",
+char *adverb[]={ "","HEAVY","GOLDEN","IRON","","","PLASTIC","WOODEN","SMALL",
 		  "GOLDEN","","OLD","SMALL","YELLOW","","IRON","","SMALL",
 		  "ANCIENT" };
 
@@ -94,9 +93,8 @@ char *cerr[]={ "","I don't understand the word","What next ??","Please be more s
 
 char *sandtxt[]={ "","You dig up a small hole in the sand.","You dig and the hole in the sand becomes deeper." };
 
-// 'stvari' is an array of descriptions to each object in game
-
-char *stvari[]= { "","It is a MERCURY 720 engine.","Look at your house key.",
+// 'object_info' is an array of descriptions to each object in game
+char *object_info[]= { "","It is a MERCURY 720 engine.","Look at your house key.",
 		  "It is a medium size green army fuel can.","It smells like a fried chicken.",
 		  "It looks like a shovel that grave-diggers use.","Just an ordinary cup.",
 		  "It has perhaps fallen from a tree.","It is a computer paper. Something is written on it.",
@@ -109,10 +107,9 @@ char *stvari[]= { "","It is a MERCURY 720 engine.","Look at your house key.",
 int inoun,iverb,iclan,ipron;
 int n,p,err,errpos;
 
-int kolstv, can=CLOSED, chest=LOCKED, pos=1, sand;
+int collision, can=CLOSED, chest=LOCKED, pos=1, sand;
 int verbs=24, nouns=18;
 
-// opis is description to each room
 char *roomnme[] ={ "",	"Small clearing		",
 			"Forrest		",
 			"Forrest		",
@@ -130,7 +127,8 @@ char *roomnme[] ={ "",	"Small clearing		",
 			"Cliff path		",
 			"Rocky ledge		" };
 
-char *opis[]={ "",
+// description is description to each room
+char *description[]={ "",
 			"  You are on a small clearing. Here is your crashed plane, and you can see\n"
 			"woods all around. There is a small path leading into the woods to the west\n"
 			"and you can see a small sign by the path.",
@@ -192,8 +190,7 @@ char *opis[]={ "",
 int objpos[]={ 0,6,-2,10,10,16,1,1,-255,114,101,109,105,105,-4,109,101,101,116};
 
 // names for objects :
-
-char *opis_stvari[]={ "","a heavy engine",
+char *object_name[]={ "","a heavy engine",
 			 "a golden key",
 			 "an iron can",
 			 "some food",
@@ -213,40 +210,39 @@ char *opis_stvari[]={ "","a heavy engine",
 			 "an ancient grave" };
 
 // functions :
-
-char *word_parse (char*,char*,int); // line parser
-void enargv      (char*); // line parser's help function
-void doit        (void);  // do orders
-void recgn       (void);  // see which word is which (verb, or noun ... )
-void see_error   (void);  // see if any sintax error and identify words
-void opisi       (void); // describe the room
-int  compare     (char*,char*);  // compare two strings
-void clearfields (void);  // clear wordtype[] and globargv[]
-void event       (void);  // events in the game
-void look        (void);  // look something
-void get         (void);  // No comment needed here
-void read_       (void);
-void open_       (void);
-void drop        (void);
-void turn        (void);
-void dig         (void);
-void start       (void);
-void close_      (void);
-void unlock      (void);
-void load_       (void); // load savegame
-void save_       (void); // save savegame
-void n_          (void);
-void s_          (void);
-void e_          (void);
-void w_          (void);
-void enter	     (void);
-void opendoor    (void);
-void fall        (void);
-void endgame     (void);
-void inv	     (void); // inventory
-void help	     (void);
-void chk_adj	 (void); // check if right adjective used....
-void sinonimi    (void); // check for sinonims
+char *word_parse 		(char*,char*,int); // line parser
+void enargv      		(char*); // line parser's help function
+void doit        		(void);  // do orders
+void recognize       	(void);  // see which word is which (verb, or noun ... )
+void see_error   		(void);  // see if any sintax error and identify words
+void describe_the_room  (void);
+int  compare     		(char*,char*);  // compare two strings
+void clearfields 		(void);  // clear wordtype[] and globargv[]
+void event       		(void);  // events in the game
+void look        		(void);  // look something
+void get         		(void);  // No comment needed here
+void read_       		(void);
+void open_       		(void);
+void drop        		(void);
+void turn        		(void);
+void dig         		(void);
+void start       		(void);
+void close_      		(void);
+void unlock      		(void);
+void load_       		(void); // load savegame
+void save_       		(void); // save savegame
+void n_          		(void);
+void s_          		(void);
+void e_          		(void);
+void w_          		(void);
+void enter	     		(void);
+void opendoor    		(void);
+void fall        		(void);
+void endgame     		(void);
+void inv	     		(void); // inventory
+void help	     		(void);
+void chk_adjective	 	(void); // check if right adjective used....
+void definition    		(void); // check for sinonims
 
 extern unsigned _stklen= 10000;
 main()
@@ -273,10 +269,10 @@ main()
 		printf ("\n--------------------------------------------------------------------------------");
 		clearfields();
 		enargv(string);
-		recgn();
+		recognize();
 		see_error();
-		sinonimi();
-		chk_adj();
+		definition();
+		chk_adjective();
 		if (err==0)
 			doit();
 		if (err!=0)
@@ -308,13 +304,13 @@ void inv()
 	int i;
 
 	printf ("\nYou have :");
-	if (kolstv==0)
+	if (collision==0)
 		printf ("    nothing...Except your sanity...");
 	else
 		for (i=1;i<nouns;i++)
 		{
 			if (objpos[i]==0)
-				printf ("\n%s",opis_stvari[i]);
+				printf ("\n%s",object_name[i]);
 		}
 
 }
@@ -349,7 +345,7 @@ void event()
 
 }
 
-void sinonimi(void)
+void definition(void)
 {
 	if (iverb==17)
 		iverb=7;
@@ -361,7 +357,7 @@ void sinonimi(void)
 		inoun=10;
 }
 
-void opisi()
+void describe_the_room()
 {
 	int o;
 
@@ -374,18 +370,18 @@ void opisi()
 	printf ("%s", roomnme[pos]);
 	printf ("\n--------------------------------------------------------------------------------");
 
-	printf ("\n%s",opis[pos]);
+	printf ("\n%s",description[pos]);
 
 	for (o=1;o<nouns+1;o++)
 	{
 		if (objpos[o]==pos)
 		{
-			printf ("\n  There is %s here.",opis_stvari[o]);
+			printf ("\n  There is %s here.",object_name[o]);
 		}
 	}
 }
 
-void chk_adj (void)
+void chk_adjective (void)
 {
 	if (ipron == 2)
 		if (inoun== 2 || inoun== 9)
@@ -453,107 +449,107 @@ void doit()
 void n_()
 {
 	int i;
-	if (prostorija[pos].n<0)
+	if (room[pos].n<0)
 	{
-		i=(prostorija[pos].n * (-1));
+		i=(room[pos].n * (-1));
                 if (i==5)
 		{
 			fall();
 			return;
 		}
-		printf ("%s",mess[i]);
+		printf ("%s",message[i]);
 		return;
 	}
 	else
-		if (prostorija[pos].n==0)
+		if (room[pos].n==0)
 		{
-			opisi();
+			describe_the_room();
 			return;
 		}
 		else
 		{
-			pos=prostorija[pos].n;
-			opisi();
+			pos=room[pos].n;
+			describe_the_room();
 		}
 }
 void s_()
 {
 	int i;
-	if (prostorija[pos].s<0)
+	if (room[pos].s<0)
 	{
-		i=(prostorija[pos].s * (-1));
+		i=(room[pos].s * (-1));
                 if (i==5)
 		{
 			fall();
 			return;
 		}
-		printf ("%s",mess[i]);
+		printf ("%s",message[i]);
 		return;
 	}
 	else
-		if (prostorija[pos].s==0)
+		if (room[pos].s==0)
 		{
-			opisi();
+			describe_the_room();
 			return;
 		}
 		else
 		{
-			pos=prostorija[pos].s;
-			opisi();
+			pos=room[pos].s;
+			describe_the_room();
 		}
 }
 void e_()
 {
 	int i;
-	if (prostorija[pos].e<0)
+	if (room[pos].e<0)
 	{
-		i=(prostorija[pos].e * (-1));
+		i=(room[pos].e * (-1));
 		if (i==3)
 		{
 			opendoor();
 			return;
 		}
-		printf ("%s",mess[i]);
+		printf ("%s",message[i]);
 		return;
 	}
 	else
-		if (prostorija[pos].e==0)
+		if (room[pos].e==0)
 		{
-			opisi();
+			describe_the_room();
 			return;
 		}
 		else
 		{
-			pos=prostorija[pos].e;
+			pos=room[pos].e;
 			printf ("");
-			opisi();
+			describe_the_room();
 			return;
 		}
 }
 void w_()
 {
 	int i;
-	if (prostorija[pos].w<0)
+	if (room[pos].w<0)
 	{
-		i=(prostorija[pos].w * (-1));
+		i=(room[pos].w * (-1));
 		if (i==5)
 		{
 			fall();
 			return;
 		}
-		printf ("%s",mess[i]);
+		printf ("%s",message[i]);
 		return;
 	}
 	else
-		if (prostorija[pos].w==0)
+		if (room[pos].w==0)
 		{
-			opisi();
+			describe_the_room();
 			return;
 		}
 		else
 		{
-			pos=prostorija[pos].w;
-			opisi();
+			pos=room[pos].w;
+			describe_the_room();
 		}
 }
 
@@ -571,7 +567,7 @@ void enter()
 	}
 	if (inoun==11)
 	{
-		if (prostorija[9].e==10)
+		if (room[9].e==10)
 			e_();
 		else
 			printf ("\nThe door is closed.");
@@ -589,13 +585,13 @@ void look()
 {
 	if (globargc==1)
 	{
-		opisi();
+		describe_the_room();
 		err=0;
 		return;
 	}
 	else
 		if (objpos[inoun]==pos || objpos[inoun]==0 || objpos[inoun]==-3 || objpos[inoun]==(pos+100) )
-			printf ("\n%s",stvari[inoun]);
+			printf ("\n%s",object_info[inoun]);
 		else
 			printf ("\nYou can't see that here!");
 }
@@ -615,11 +611,11 @@ void get()
 			return;
 		}
 
-		if (kolstv<4)
+		if (collision<4)
 		{
 			printf("\nOk. Now you got it.");
 			objpos[inoun]=0;
-			kolstv++;
+			collision++;
 			return;
 		}
 		else
@@ -640,7 +636,7 @@ void drop()
 	{
 		printf("\nOk. Now you droped it.");
 		objpos[inoun]=pos;
-		kolstv--;
+		collision--;
 		return;
 	}
 	else
@@ -683,7 +679,7 @@ void dig()
 				printf ("\n\n\nAs you approach to the grave to dig it, you can hear a demonic voice from the\n");
 				printf ("grave. You drop the shovel with fright.");
 				objpos[5]= pos;
-				kolstv--;
+				collision--;
 				return;
 			}
 
@@ -736,7 +732,7 @@ void open_()
 		{
 			printf ("\nYou open a golden chest, and you see a small paper in it.");
 			objpos[8]=-3;
-			stvari[9]= "The golden chest is opened. There is a piece of paper in it.";
+			object_info[9]= "The golden chest is opened. There is a piece of paper in it.";
 			chest=OPENED;
 		}
 		else
@@ -756,7 +752,7 @@ void open_()
 	}
 	if (inoun==15)
 	{
-		if (prostorija[9].e==10)
+		if (room[9].e==10)
 			printf ("\nThe iron door is already opened.");
 		else
 			e_();
@@ -778,7 +774,7 @@ void close_()
 		{
 			printf ("\nYou close a golden chest.");
 			chest=CLOSED;
-			stvari[9]= "The golden chest is closed.";
+			object_info[9]= "The golden chest is closed.";
 		}
 		else
 			printf ("\nThe golden chest is already closed.");
@@ -816,7 +812,7 @@ void unlock()
 			if (objpos[2]==0)
 			{
 				printf ("\nYou unlock the golden chest.");
-				stvari[9]= "The golden chest is closed.";
+				object_info[9]= "The golden chest is closed.";
 				chest=CLOSED;
 				return;
 			}
@@ -900,7 +896,7 @@ void opendoor()
 	else
 	{
 		printf ("\nThe door bulges forward for few times and then opens.");
-		prostorija[9].e=10;
+		room[9].e=10;
 	}
 }
 void endgame()
@@ -993,7 +989,7 @@ void see_error()
 		}
 
 	for (i=1; i< (nouns+1); i++)
-		if ( compare (globargv[1], pron[i]) == NERR )
+		if ( compare (globargv[1], adverb[i]) == NERR )
 		{
 			ipron = i;
 
@@ -1020,7 +1016,7 @@ void see_error()
 				}
 
 			for (i=1; i< (nouns+1); i++)
-				if ( compare (globargv[2], pron[i]) == NERR )
+				if ( compare (globargv[2], adverb[i]) == NERR )
 				{
 					ipron = i;
 
@@ -1036,7 +1032,7 @@ void see_error()
 		}
 }
 
-void recgn()
+void recognize()
 {
 	int i, j;
 
@@ -1049,7 +1045,7 @@ void recgn()
 			if (  compare(globargv[j],noun[i])==NERR  )
 				wordtype[j]=1;
 		for (i=1 ;i< (nouns+1) ;i++)
-			if (  compare(globargv[j],pron[i])==NERR  )
+			if (  compare(globargv[j],adverb[i])==NERR  )
 				wordtype[j]=4;
 		for (i=1 ;i< 5 ;i++)
 			if (  compare(globargv[j],clan[i])==NERR  )
@@ -1095,7 +1091,7 @@ void enargv( char *buf )
 		globargv[ globargc ] = (char*) malloc( strlen(pbuf)+1 );
 		strcpy ( globargv[ globargc++ ],pbuf );
 	}
-	globargv[ globargc ]=NULL;
+	// globargv[ globargc ]=NULL;
 }
 
 char *word_parse( char *line, char *word, int delim )
