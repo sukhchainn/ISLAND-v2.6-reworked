@@ -5,16 +5,18 @@
 yourself....
 
 
-Black Gate coderz group...                         Ú- - --Ä  Ä- -¿
+Black Gate coderz group...                         Ãš- - --Ã„  Ã„- -Â¿
 CyberDaemon...codez                                : CyberDaemon
-Dreamcatcher..design and ideas                     À  Ä-Ä  -Ä-- ÄÙ
+Dreamcatcher..design and ideas                     Ã€  Ã„-Ã„  -Ã„-- Ã„Ã™
 Chepponi......BBS                              <vkrstul@public.srce.hr>
+
+SukhchainSingh..Ported this game to windows
 
 */
 
 #include <time.h>
 #include <stdio.h>
-#include <dos.h>
+#include <direct.h>
 #include <stdlib.h>
 #include <time.h>
 #include <string.h>
@@ -46,7 +48,8 @@ struct smjerovi // structure of directions like north, south, east, west
 	int w;
 };
 
-struct smjerovi prostorija[] = { 0,0,0,0,    // structure with entrances to other rooms (4 directions)
+struct smjerovi prostorija[] = { 
+				0,0,0,0,    // structure with entrances to other rooms (4 directions)
 				-1,-1,-1,2,
 				0,3,1,0,
 				2,4,0,0,
@@ -62,7 +65,8 @@ struct smjerovi prostorija[] = { 0,0,0,0,    // structure with entrances to othe
 				14,12,-1,-1,
 				-4,13,-4,-4,
 				-1,-1,9,16,
-				-5,-5,15,-5      };
+				-5,-5,15,-5      
+			};
 char *mess[]= { "",                            // Some messages
 		"The forest is unpassable unless you are the coder of this game to make it \npassable...",
 		"You don't know how to swim. Besides, it's full of sharks.",
@@ -105,8 +109,8 @@ char *stvari[]= { "","It is a MERCURY 720 engine.","Look at your house key.",
 int inoun,iverb,iclan,ipron;
 int n,p,err,errpos;
 
-int kolstv,can=CLOSED,chest=LOCKED,pos=1,sand;
-int verbs=24,nouns=18;
+int kolstv, can=CLOSED, chest=LOCKED, pos=1, sand;
+int verbs=24, nouns=18;
 
 // opis is description to each room
 char *roomnme[] ={ "",	"Small clearing		",
@@ -249,9 +253,9 @@ main()
 {
 	char string[300];
 
-	asm( "jmp start" );
-	asm( "db 'UnderWorld forever....CyberDaemon'" );
-start:
+	// asm( "jmp start " );
+	// asm( "db 'UnderWorld forever....CyberDaemon' " );
+// start:
 	srand(time(NULL));
 	clrscr();
 	printf ("%s", roomnme[pos]);
@@ -263,7 +267,7 @@ start:
 		err=0;
 		errpos=0;
 		printf ("\n > ");
-		gets (string);
+		gets(string);
 		clrscr();
 		printf ("%s", roomnme[pos]);
 		printf ("\n--------------------------------------------------------------------------------");
@@ -282,7 +286,7 @@ start:
 				printf ("\n%s",cerr[err]);
 		event();
 	}
-	while (1==1);
+	while (1);
 }
 
 void help()
@@ -424,7 +428,7 @@ void doit()
 		case 10:
 		  close_();	  break;
 		case 11:
-		   unlock();	  break;
+		   unlock();  break;
 		case 12:
 		  read_();	  break;
 		case 13:
@@ -878,8 +882,8 @@ void fall()
 	printf ("\n\n    The game is over. You died.");
 	printf ("\n\nPress any key to return to DOS.");
 	getch();
-	asm( "mov ax, 4c00h" );
-	asm( "int 21h" );
+	// asm( "mov ax, 4c00h" );
+	// asm( "int 21h" );
 }
 void opendoor()
 {
@@ -913,8 +917,8 @@ void endgame()
 		getch();
 		clrscr();
 
-		asm( "mov ax, 4c00h" );
-		asm( "int 21h" );
+		// asm( "mov ax, 4c00h" );
+		// asm( "int 21h" );
 	}
 	else
 	{
@@ -1064,6 +1068,7 @@ void clearfields()
 	}
 }
 
+// This code has some serious problems
 int compare (char *s, char *s1)
 {
 	int a=0,i=0;
@@ -1087,7 +1092,7 @@ void enargv( char *buf )
 	bufptr=buf;
 	while (  bufptr=word_parse( bufptr,pbuf,0)  )
 	{
-		globargv[ globargc ]= malloc( strlen(pbuf)+1 );
+		globargv[ globargc ] = (char*) malloc( strlen(pbuf)+1 );
 		strcpy ( globargv[ globargc++ ],pbuf );
 	}
 	globargv[ globargc ]=NULL;
@@ -1096,10 +1101,23 @@ void enargv( char *buf )
 char *word_parse( char *line, char *word, int delim )
 {
 	int quot=0;
-	while ( *line && (isspace (*line) || *line==delim) )
+	/**
+	* "*line" checks if the 1st character is not a null terminator.
+	* "&&" will execute the rest of the condition if "*line" is not null terminator.
+	* "(isspace(*line) || *line==delim)" checks if the character is a space or not
+	* and the "*line==delim" is useless because we are already checking it in
+	* the first "*line".
+	*/
+	while ( *line && (isspace(*line) || *line==delim) )
 		line++;
+	// this line is also useless since isspace() alredy cheks for it,
+	// keeping it for historical purposes.
 	if ( *line=='\n' )
 		line++;
+
+	// If I understand it correctly, this condition is supposed to be true,
+	// only if *line is '\0' and we are previously ensuring that this is not
+	// the case. Kami no itouri.
 	if ( !*line )
 	{
 		*word='\0';
@@ -1109,9 +1127,10 @@ char *word_parse( char *line, char *word, int delim )
 	{
 		if ( !quot && (*line=='\"' || *line=='\'') )
 			quot=*line++;
+		// if character is a white space and the previous character wasn't a quote
 		if ( (isspace(*line) || *line==delim) && !quot )
 			break;
-		else
+		else // this line checks (you guess it)!
 			if ( quot && *line==quot )
 			{
 				quot=0;
