@@ -11,7 +11,7 @@ Dreamcatcher..design and ideas                     À  Ä-Ä  -Ä-- ÄÙ
 Chepponi......BBS                              <vkrstul@public.srce.hr>
 
 SukhchainSingh..Ported this game to windows
-
+gcc -o ISLAND ISLAND.C include/conio.o
 */
 
 #include <time.h>
@@ -256,7 +256,7 @@ main()
 	clrscr();
 	printf ("%s", roomnme[pos]);
 	printf ("\n--------------------------------------------------------------------------------");
-	printf ("\nISLAND v2.6, is a small textual adventure coded by CyberDaemon, Black Gate...");
+	printf ("\nISLAND v2.6, is a small textual adventure coded by CyberDaemon, Black Gate and ported by Sukhchain Singh.");
 	printf ("\n\n");
 	do
 	{
@@ -282,7 +282,7 @@ main()
 				printf ("\n%s",cerr[err]);
 		event();
 	}
-	while (1);
+	while (true);
 }
 
 void help()
