@@ -1102,7 +1102,7 @@ char *word_parse( char *line, char *word, int delim )
 	* "&&" will execute the rest of the condition if "*line" is not null terminator.
 	* "(isspace(*line) || *line==delim)" checks if the character is a space or not
 	* and the "*line==delim" is useless because we are already checking it in
-	* the first "*line".
+	* the first "isspace(*line)".
 	*/
 	while ( *line && (isspace(*line) || *line==delim) )
 		line++;
