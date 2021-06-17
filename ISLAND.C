@@ -256,7 +256,7 @@ main()
 	clrscr();
 	printf ("%s", roomnme[pos]);
 	printf ("\n--------------------------------------------------------------------------------");
-	printf ("\nISLAND v2.6, is a small textual adventure coded by CyberDaemon, Black Gate and ported by Sukhchain Singh.");
+	printf ("\nISLAND v2.6, is a small textual adventure coded by CyberDaemon, Black Gate and ported to windows by Sukhchain Singh.");
 	printf ("\n\n");
 	do
 	{
